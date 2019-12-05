@@ -10,6 +10,4 @@ if (!days.includes(day)) {
   cp("-r", "src/template", `src/${day}`)
 }
 
-spawn("nodemon", [`src/${day}/index.js`], {
-  stdio: "inherit",
-})
+spawn("nodemon", [`src/${day}/index.js`])
