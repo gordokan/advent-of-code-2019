@@ -4,26 +4,29 @@ const prepareInput = (rawInput) => rawInput
 
 const input = prepareInput(readInput())
 
-const goA = (input) => {
+const goA = (input, noun, verb) => {
   const numArr = input.toString()
   .trim()
   .split(",")
   .map(Number);
 
-  let currentPosition = 0; // this gets + by 4 each time
+  numArr[1] = noun;
+  numArr[2] = verb;
+
+  let instructionPointer = 0; // this gets + by 4 each time
   let nextPosition = 4;
 
-  while(currentPosition < nextPosition) {
-    if (numArr[currentPosition] === 99) break;
+  while(instructionPointer < nextPosition) {
+    if (numArr[instructionPointer] === 99) break;
 
-    const mathFn = numArr[currentPosition] === 1 ? (a,b) => a+b : (a,b) => a*b;
-    const outuptPosition = numArr[currentPosition + 3];
-    const pos1 = numArr[currentPosition+1];
-    const pos2 = numArr[currentPosition+2];
+    const instruction = numArr[instructionPointer] === 1 ? (a,b) => a+b : (a,b) => a*b;
+    const outuptPosition = numArr[instructionPointer + 3];
+    const pos1 = numArr[instructionPointer+1];
+    const pos2 = numArr[instructionPointer+2];
 
-    numArr[outuptPosition] = mathFn(numArr[pos1], numArr[pos2]);
+    numArr[outuptPosition] = instruction(numArr[pos1], numArr[pos2]);
 
-    currentPosition = nextPosition;
+    instructionPointer = nextPosition;
     nextPosition = nextPosition + 4;
   }
 
@@ -31,7 +34,27 @@ const goA = (input) => {
 }
 
 const goB = (input) => {
-  return
+  let noun = 0;
+  let verb = 0;
+  let _break = false;
+
+  for(let i = 0; i <= 99; i++) {
+    for(let j = 0; j <= 99; j++) {
+      const output = goA(input, i, j);
+      console.log(output);
+      if (output === 19690720) {
+        noun = i;
+        verb = j;
+        _break = true;
+        break;
+      }
+    }
+    if (_break) {
+      break;
+    }
+  }
+
+  return 100 * noun + verb;
 }
 
 /* Tests */
@@ -41,7 +64,7 @@ const goB = (input) => {
 /* Results */
 
 console.time("Time")
-const resultA = goA(input)
+const resultA = goA(input, 40, 19)
 const resultB = goB(input)
 console.timeEnd("Time")
 
